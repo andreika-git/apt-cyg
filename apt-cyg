@@ -122,10 +122,16 @@ function wget {
   if command wget -h &>/dev/null
   then
     command wget "$@"
-  else
+  # see https://github.com/transcode-open/apt-cyg/issues/99
+  elif command lynx -version &>/dev/null
+  then
     warn wget is not installed, using lynx as fallback
     set "${*: -1}"
     lynx -source "$1" > "${1##*/}"
+  else
+    warn wget and lynx are not installed, using curl as fallback
+    set "${*/\-O/" -o"}"
+    command curl -L $1
   fi
 }
 
